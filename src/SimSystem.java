@@ -23,6 +23,22 @@ public class SimSystem {
 		this.round = 0;
 	}
 
+	public void getPredAcceleration() {
+
+		for(Particle p : particles) {
+			p.setPredAccX(p.getAccelerationX());
+			p.setPredAccY(p.getAccelerationY());
+		
+			getForces(p);
+
+			p.setVelocityX(p.getVelocityX() + delta_t*p.getAccelerationX());
+			p.setVelocityY(p.getVelocityY() + delta_t*p.getAccelerationY());
+			p.setX(p.getX() + delta_t*(p.getVelocityX() + delta_t*p.getAccelerationX()));
+			p.setY(p.getY() + delta_t*(p.getVelocityY() + delta_t*p.getAccelerationY()));
+		}
+
+	}
+
 	public void updateParticles() {
 		List<Particle> removed = new ArrayList<>();
 		for(Particle p : particles) {
@@ -77,8 +93,12 @@ public class SimSystem {
 		double new_ax = p.getAccelerationX();
 		double new_ay = p.getAccelerationY();
 
-		double rx = p.getX() + p.getVelocityX()*delta_t + (1.0/6.0)*(4*new_ax - ax)*Math.pow(delta_t,2);
-		double ry = p.getY() + p.getVelocityY()*delta_t + (1.0/6.0)*(4*new_ay - ay)*Math.pow(delta_t,2);
+		double pred_ax = p.getPredAccX();
+		double pred_ay = p.getPredAccY();
+
+
+		double rx = p.getX() + p.getVelocityX()*delta_t + (1.0/6.0)*(4*ax - pred_ax)*Math.pow(delta_t,2);
+		double ry = p.getY() + p.getVelocityY()*delta_t + (1.0/6.0)*(4*ay - pred_ay)*Math.pow(delta_t,2);
 
 		if(ry < -0.1) {
 			return true;
@@ -87,15 +107,14 @@ public class SimSystem {
 		p.setX(rx);
 		p.setY(ry);
 
-		getForces(p);
-
-		double vx = p.getVelocityX() + delta_t*(2*p.getAccelerationX() + 5*new_ax - ax)/6.0;
-		double vy = p.getVelocityY() + delta_t*(2*p.getAccelerationY() + 5*new_ay - ay)/6.0;
+		double vx = p.getVelocityX() + delta_t*(2*new_ax + 5*ax - pred_ax)*(1.0/6.0);
+		double vy = p.getVelocityY() + delta_t*(2*new_ay + 5*ay - pred_ay)*(1.0/6.0);
 
 		p.setVelocityX(vx);
 		p.setVelocityY(vy);
-
-		getForces(p);
+		
+		p.setPredAccX(ax);
+		p.setPredAccY(ay);
 
 		return false;
 
@@ -141,20 +160,20 @@ public class SimSystem {
 
 				switch(w) {
             		case UP:
-            			dx =- i.getX();
-            			dy =- (1.0 - i.getRadius());
+            			dx = 0.0;
+            			dy =- 1.0;
             			break;
             		case LEFT:
-            			dx =- (-i.getRadius());
-            			dy =- i.getY();
+            			dx =- 0.0;
+            			dy = 0.0;
             			break;
             		case RIGHT:
-            			dx =- (0.4 + i.getRadius());
-            			dy =- i.getY();
+            			dx =- 0.4;
+            			dy = 0.0;
             			break;
             		case DOWN:
-            			dx =- i.getX();
-            			dy =- (i.getRadius());
+            			dx = 0.0;
+            			dy =- 0.0;
             			break;
             	}
 
@@ -173,17 +192,6 @@ public class SimSystem {
 			}
 				
 		}
-
-		if(i.getId() == 102 && round > 10000 && round <18000) {
-			System.out.println(round);
-			System.out.println(total_x/i.getMass());
-			System.out.println(total_y/i.getMass());
-			System.out.println(total_x);
-			System.out.println(total_y);
-			System.out.println(" ");
-		}
-
-
 
 		i.setAccelerationX(total_x/i.getMass());
 		i.setAccelerationY(total_y/i.getMass());

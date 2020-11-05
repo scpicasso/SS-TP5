@@ -11,6 +11,9 @@ public class Particle implements Comparable<Particle>{
     private double vy;
     private double ax;
     private double ay;
+    private double pred_ax;
+    private double pred_ay;
+
 
 
     public Particle(int id, double x, double y, double vx, double vy, double mass,
@@ -76,6 +79,14 @@ public class Particle implements Comparable<Particle>{
     public double getAccelerationY() {
         return ay;
     }
+
+    public double getPredAccX() {
+        return pred_ax;
+    }
+
+    public double getPredAccY() {
+        return pred_ay;
+    }
     
     public double getRadius() {
         return radius;
@@ -115,6 +126,14 @@ public class Particle implements Comparable<Particle>{
 
     public void setAccelerationY(double ay){
         this.ay = ay;
+    }
+
+    public void setPredAccX(double pred_ax) {
+        this.pred_ax = pred_ax;
+    }
+
+    public void setPredAccY(double pred_ay) {
+        this.pred_ay = pred_ay;
     }
 
 	@Override

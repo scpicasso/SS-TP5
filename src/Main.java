@@ -36,6 +36,8 @@ public class Main  {
 
 		SimSystem system = new SimSystem(particles, delta_t, kn, kt, gap);
 
+		system.getPredAcceleration();
+
 		int round = 0;
 		int printed = 0;
 
