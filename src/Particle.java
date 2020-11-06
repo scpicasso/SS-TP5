@@ -40,7 +40,7 @@ public class Particle implements Comparable<Particle>{
     }
 
     public double relativeV(Particle p, double enx, double eny) {
-        return (vx - p.getVelocityX())*-eny + (vy - p.getVelocityY())*enx;
+        return (vx - p.getVelocityX())*(-eny) + (vy - p.getVelocityY())*enx;
     }
 
     public double overlapWall(Walls wall, double gap) {

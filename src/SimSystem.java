@@ -26,6 +26,12 @@ public class SimSystem {
 	public void getPredAcceleration() {
 
 		for(Particle p : particles) {
+			getEachPredAcceleration(p);
+		}
+
+	}
+
+	public void getEachPredAcceleration(Particle p) {
 			p.setPredAccX(p.getAccelerationX());
 			p.setPredAccY(p.getAccelerationY());
 		
@@ -35,8 +41,6 @@ public class SimSystem {
 			p.setVelocityY(p.getVelocityY() + delta_t*p.getAccelerationY());
 			p.setX(p.getX() + delta_t*(p.getVelocityX() + delta_t*p.getAccelerationX()));
 			p.setY(p.getY() + delta_t*(p.getVelocityY() + delta_t*p.getAccelerationY()));
-		}
-
 	}
 
 	public void updateParticles() {
@@ -51,12 +55,11 @@ public class SimSystem {
 				}
 			}
 		}
-
 		particles.removeAll(removed);
 	}
 
 	public boolean reposition(Particle p) {
-		double ry = 1.0-p.getRadius();
+		double ry = 1.0-p.getRadius()-0.001;
 		Random r = new Random();
 		p.setY(ry);
 		boolean flag = false;
@@ -80,6 +83,9 @@ public class SimSystem {
 			if(flag) {
 				p.setVelocityX(0.0);
 				p.setVelocityY(0.0);
+				p.setAccelerationX(0.0);
+				p.setAccelerationY(-10.0);
+				getEachPredAcceleration(p);
 				return flag;
 			}
 		}
@@ -125,17 +131,12 @@ public class SimSystem {
 		double total_y = i.getMass()*-10.0;
 		double total_x = 0.0;
 
-		if(i.getId() == 102) {
-			round++;
-
-		}
-
 		for(Particle j: particles){
 			double overlap = i.overlap(j);
 
 			if(overlap > 0) {
-				double dx = i.getX() - j.getX();
-				double dy = i.getY() - j.getY();
+				double dx = j.getX() - i.getX();
+				double dy = j.getY() - i.getY();
 				double dist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 
 				double enx = dx/dist;
@@ -155,32 +156,27 @@ public class SimSystem {
 			double overlap = i.overlapWall(w, gap);
 
 			if(overlap > 0) {
-				double dx = i.getX();
-				double dy = i.getY();
+				double enx = 0;
+				double eny = 0;
 
 				switch(w) {
             		case UP:
-            			dx = 0.0;
-            			dy =- 1.0;
+            			enx = 0.0;
+            			eny = 1.0;
             			break;
             		case LEFT:
-            			dx =- 0.0;
-            			dy = 0.0;
+            			enx = -1.0;
+            			eny = 0.0;
             			break;
             		case RIGHT:
-            			dx =- 0.4;
-            			dy = 0.0;
+            			enx = 1.0;
+            			eny = 0.0;
             			break;
             		case DOWN:
-            			dx = 0.0;
-            			dy =- 0.0;
+            			enx = 0.0;
+            			eny = -1.0;
             			break;
             	}
-
-				double dist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-
-				double enx = dx/dist;
-				double eny = dy/dist;
 
 				double fn = -kn*overlap;
 				double ft = -kt*overlap*(-i.getVelocityX()*eny + i.getVelocityY()*enx);

@@ -11,12 +11,12 @@ width = 0.4
 file = open("input", 'w')
 
 particles = []
-for i in range(0, 500000):
+for i in range(0, 200000):
   flag = True
   j = 0
-  radius = random.uniform(0.02, 0.03)
+  radius = random.uniform(0.01, 0.015)
   x = random.uniform(0.001 + radius, width - 0.001 - radius)
-  y = random.uniform(0.001 + radius, height - 0.001 - radius)
+  y = random.uniform(0.01 + radius, height - 0.001 - radius)
 
   while (j < len(particles) and flag):
     if(sqrt((particles[j][0] - x)**2 + (particles[j][1] - y)**2) < radius + particles[j][2]):

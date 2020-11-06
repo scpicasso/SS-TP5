@@ -41,9 +41,9 @@ public class Main  {
 		int round = 0;
 		int printed = 0;
 
-		double print_time = delta_t*100;
+		double print_time = delta_t*1000;
 
-		while(current_time <= 40) {
+		while(current_time <= 15) {
 			if(printed*print_time <= current_time) {
 				printOutput(particles, printed, current_time);
 				printed ++;
