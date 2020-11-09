@@ -1,4 +1,3 @@
-package src;
 
 public class Particle implements Comparable<Particle>{
 	
@@ -46,7 +45,8 @@ public class Particle implements Comparable<Particle>{
     public double overlapWall(Walls wall, double gap) {
         switch(wall) {
             case UP:
-                return radius - Math.abs(1.0 - y);
+//                return radius - Math.abs(1.0 - y);
+            	return radius - Math.abs(1.0 - y);
             case LEFT:
                 return radius - Math.abs(0.0 - x);
             case RIGHT:
@@ -70,6 +70,10 @@ public class Particle implements Comparable<Particle>{
 
     public double getVelocityY() {
         return vy;
+    }
+    
+    public double getVelocity() {
+        return Math.sqrt(vy*vy + vx*vx);
     }
 
     public double getAccelerationX() {

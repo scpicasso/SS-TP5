@@ -1,4 +1,3 @@
-package src;
 
 import java.util.*;
 import java.util.List;
@@ -147,9 +146,7 @@ public class SimSystem {
 
 				total_x = total_x + fn*enx - ft*eny;
 				total_y = total_y + fn*eny + ft*enx;
-
 			}
-
 		}
 
 		for(Walls w : Walls.values()) {
@@ -191,8 +188,14 @@ public class SimSystem {
 
 		i.setAccelerationX(total_x/i.getMass());
 		i.setAccelerationY(total_y/i.getMass());
-
-
+	}
+	
+	public double getKE() {
+		double totalKE = 0.0;
+		for(Particle j: particles){
+			totalKE += 0.5*j.getMass()*Math.pow(j.getVelocity(), 2);
+		}
+		return totalKE;
 	}
 
 

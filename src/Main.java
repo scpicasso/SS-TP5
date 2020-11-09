@@ -1,4 +1,3 @@
-package src;
 
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -19,9 +18,10 @@ public class Main  {
 		double kn = 10e+5;
 		double kt = 2*kn;
 
-		double delta_t = 0.1*Math.sqrt(0.01/kn);
-		double gap = Double.valueOf(args[0]);
-
+		double delta_t = (0.1*Math.sqrt(0.01/kn))/2;
+//		double gap = Double.valueOf(args[0]);
+		double gap = 0.15;
+		
 		double current_time = 0.0;
 
 		Parser fp = new Parser();
@@ -43,15 +43,18 @@ public class Main  {
 
 		double print_time = delta_t*1000;
 
-		while(current_time <= 15) {
-			if(printed*print_time <= current_time) {
-				printOutput(particles, printed, current_time);
-				printed ++;
+		try (Writer writer = new BufferedWriter(new OutputStreamWriter( new FileOutputStream("KEoutput.txt"), "utf-8"))) {
+			while(current_time <= 5) {
+//				if(printed*print_time <= current_time) {
+//					printOutput(particles, printed, current_time);
+//					printed ++;
+//				}
+					
+				writer.write(String.valueOf(current_time) + " " + String.valueOf(system.getKE()) + "\n");
+				system.updateParticles();
+				round ++;
+				current_time = delta_t*round;
 			}
-
-			system.updateParticles();
-			round ++;
-			current_time = delta_t*round;
 		}
 
 	}
@@ -67,6 +70,5 @@ public class Main  {
 		}
 		return;			    	
 	}
-
-
+	
 }
