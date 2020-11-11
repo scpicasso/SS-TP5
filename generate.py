@@ -6,7 +6,7 @@ from math import sqrt
 #rx ry radius 
 
 height = 1.0
-width = 0.4
+width = 0.3
 
 file = open("input", 'w')
 
@@ -16,7 +16,7 @@ for i in range(0, 200000):
   j = 0
   radius = random.uniform(0.01, 0.015)
   x = random.uniform(0.001 + radius, width - 0.001 - radius)
-  y = random.uniform(0.01 + radius, height - 0.001 - radius)
+  y = random.uniform(0.001 + radius, height - 0.05 - radius)
 
   while (j < len(particles) and flag):
     if(sqrt((particles[j][0] - x)**2 + (particles[j][1] - y)**2) < radius + particles[j][2]):

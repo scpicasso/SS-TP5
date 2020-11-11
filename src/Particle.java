@@ -1,3 +1,8 @@
+package src;
+
+import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Particle implements Comparable<Particle>{
 	
@@ -12,7 +17,8 @@ public class Particle implements Comparable<Particle>{
     private double ay;
     private double pred_ax;
     private double pred_ay;
-
+    private double ft;
+    private double fn;
 
 
     public Particle(int id, double x, double y, double vx, double vy, double mass,
@@ -26,6 +32,24 @@ public class Particle implements Comparable<Particle>{
         this.vy = vy;
         this.ax = ax;
         this.ay = ay;
+        this.ft = 0;;
+        this.fn = 0;
+    }
+
+    public double getFt() {
+        return ft;
+    }
+
+    public double getFn() {
+        return fn;
+    }
+
+    public void setFt(double ft) {
+        this.ft = ft;
+    }
+
+    public void setFn(double fn) {
+        this.fn = fn;
     }
 
     public double overlap(Particle p) {
@@ -45,14 +69,13 @@ public class Particle implements Comparable<Particle>{
     public double overlapWall(Walls wall, double gap) {
         switch(wall) {
             case UP:
-//                return radius - Math.abs(1.0 - y);
             	return radius - Math.abs(1.0 - y);
             case LEFT:
                 return radius - Math.abs(0.0 - x);
             case RIGHT:
-                return radius - Math.abs(0.4 - x);
+                return radius - Math.abs(0.3 - x);
             case DOWN:
-                if(x > 0.2 - gap/2 && x < 0.2 + gap/2) 
+                if(x > 0.15 - gap/2 && x < 0.15 + gap/2) 
                     return -1;
                 else
                     return radius - Math.abs(0.0 - y);

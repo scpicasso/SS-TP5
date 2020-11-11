@@ -2,41 +2,36 @@
 
 import matplotlib.pyplot as plt
 
-import statistics as sts
-
 import numpy as np
 
 
 def plotError(filename):
 
-  aux = []
+  x = []
+  y = []
+  y2 = []
   f = open(filename, "r")
   lines = f.readlines()
   for l in lines:
     array = l.split()
-    x = float(array[0])
-    y = float(array[1])
+    x.append(float(array[0]))
+    y.append(float(array[1]))
+    y2.append(float(array[2]))
 
-    plt.errorbar(x, y,
-       yerr=0,
-       marker='o',
-       color='k',
-       ecolor='k',
-       # markerfacecolor='g',
-       capsize=1,
-       linestyle='None',
-       fmt=' ')
+  plt.plot(x, y, color='blue')
+  plt.plot(x, y2, color='red')
 
-    # plt.errorbar(n, mean, yerr=std)
 
   fig = plt.gcf()
   axes = fig.gca()
-  # axes.set_ylim([0, 0.16])
-  # axes.set_xlim([0, 0.035])
 
-  plt.xlabel('Tiempo (s)')
-  plt.ylabel('Energia cinetica (J)')
+  plt.xlabel('Tiempo [s]', fontsize=20)
+  plt.ylabel('Fuerzas', fontsize=20)
+  axes.tick_params(axis='x', labelsize=16)
+  axes.tick_params(axis='y', labelsize=16)
+  #axes.set_yscale('log')
   plt.show()
+
   return
 
 

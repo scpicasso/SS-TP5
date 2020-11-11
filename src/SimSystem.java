@@ -1,3 +1,5 @@
+package src;
+
 
 import java.util.*;
 import java.util.List;
@@ -12,6 +14,9 @@ public class SimSystem {
 	double dropped;
 	double gap;
 	double round;
+	double kE;
+	double total_x1;
+	double total_y1;
 
 	public SimSystem(List<Particle> particles, double delta_t, double kn, double kt, double gap) {
 		this.particles = particles;
@@ -20,6 +25,7 @@ public class SimSystem {
 		this.kt = kt;
 		this.gap = gap;
 		this.round = 0;
+		this.kE = 0;
 	}
 
 	public void getPredAcceleration() {
@@ -35,7 +41,6 @@ public class SimSystem {
 			p.setPredAccY(p.getAccelerationY());
 		
 			getForces(p);
-
 			p.setVelocityX(p.getVelocityX() + delta_t*p.getAccelerationX());
 			p.setVelocityY(p.getVelocityY() + delta_t*p.getAccelerationY());
 			p.setX(p.getX() + delta_t*(p.getVelocityX() + delta_t*p.getAccelerationX()));
@@ -44,10 +49,15 @@ public class SimSystem {
 
 	public void updateParticles() {
 		List<Particle> removed = new ArrayList<>();
+		kE = 0;
 		for(Particle p : particles) {
 			double ax = p.getAccelerationX();
 			double ay = p.getAccelerationY();
+
+			kE += 0.5*p.getMass()*Math.pow(p.getVelocity(), 2);
+
 			getForces(p);
+
 			if(beeman(p, ax, ay)) {
 				if(!reposition(p)) {
 					removed.add(p);
@@ -58,14 +68,15 @@ public class SimSystem {
 	}
 
 	public boolean reposition(Particle p) {
-		double ry = 1.0-p.getRadius()-0.001;
 		Random r = new Random();
-		p.setY(ry);
 		boolean flag = false;
 		
-		for(int i =0; i<5000 && !flag; i++) {
-			double rx = p.getRadius() + ((0.4-p.getRadius()) - p.getRadius()) * r.nextDouble();
+		for(int i =0; i<50000 && !flag; i++) {
+			double rx = p.getRadius() + ((0.3-p.getRadius()) - p.getRadius()) * r.nextDouble();
+			double ry = (p.getRadius() + 0.5) + ((1.0-p.getRadius())-(p.getRadius()+0.5)) * r.nextDouble();
 			p.setX(rx);
+			p.setY(ry);
+
 
 			flag = true;
 
@@ -186,18 +197,15 @@ public class SimSystem {
 				
 		}
 
+
 		i.setAccelerationX(total_x/i.getMass());
 		i.setAccelerationY(total_y/i.getMass());
 	}
-	
-	public double getKE() {
-		double totalKE = 0.0;
-		for(Particle j: particles){
-			totalKE += 0.5*j.getMass()*Math.pow(j.getVelocity(), 2);
-		}
-		return totalKE;
-	}
 
+	public double getKE() {
+		return kE;
+	}
+	
 
 }
 
